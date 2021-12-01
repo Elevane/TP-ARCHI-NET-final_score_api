@@ -1,0 +1,43 @@
+GUIDE D'INSTALATION DE L'API SCORE
+
+- install dotnet 6.0 
+	https://dotnet.microsoft.com/download/dotnet/6.0
+- installer sql server
+	https://www.microsoft.com/fr-fr/sql-server/sql-server-downloads
+
+- créer une base de données
+CREATE DATABASE database_name
+
+- créer une utilisateur de la base de données :
+CREATE USER user WITH PASSWORD = '********';
+
+
+
+- dans l'application :
+	dotnet user-secrets init
+	doter user-secrets set "db" "server=***host**:**port**;database=****db_name***;uid=***user***;pwd=****pwd***;"
+	 SI tu utilises windows :  "db": "server=localhost;database=**db_name***;Integrated Security=True;"
+	// host et port étant l'adresse à laquelle le server msqlserver tourne
+	//database : le nom de la base de données a utiliser
+
+- pour des question pratique : dans ce projet nous avons créer la base de donées à l'aide de l'outils de migration dotnet : 
+	- Add-Migration InitialCreate
+	- Update-Database
+
+
+Pour lancer l'api :
+	- dotnet run
+
+<> si vous rencontrez des ddifficulté avec les certificats HTTPS :
+	- dotnet dev-certs https --clean
+    - dotnet dev-certs https -t
+    
+    
+    
+ ENDPOINTS : 
+ 
+  GET: /api/v1/[controller]/     getAll
+  GET : /api/v1/[controller]/{scoreId}    getOne
+  POST : /api/v1/[controller]
+  DELETE :/api/v1/[controller]/{questionId}
+        
