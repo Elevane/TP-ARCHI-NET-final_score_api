@@ -9,13 +9,13 @@ namespace tp_final_score_api.Controllers
 {
 
     [ApiController]
-    [Route("/api/v1/[controller]")]
+  
     public class ScoreController : Controller
     {
 
         private readonly IScoreRepository _repo;
         private readonly IMapper _mapper;
-
+        public static string KEY = "qzDQZDIHQZ¨BFIhbyZQAvqumyfvhzùq53zd56qgf5qz4";
         public ScoreController(IScoreRepository repo, IMapper mapper)
         {
             _repo = repo;
@@ -25,15 +25,19 @@ namespace tp_final_score_api.Controllers
         /// Permet a l'api gateaway te verifier que le seri
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/ping")]
-        public async Task<Result> Ping()
+        [HttpGet("/api/v1/{key}/ping")]
+        public async Task<Result> Ping(string key)
         {
+            if (key != KEY)
+                return Result.Unauthorized();
             return Result.Ok();
         }
 
-        [HttpGet("/api/v1/[controller]/{userName}")]
-        public async Task<Result<List<ScoreDTO>>> GetAll(string userName)
+        [HttpGet("/api/v1/{key}/[controller]/{userName}")]
+        public async Task<Result<List<ScoreDTO>>> GetAll(string key, string userName)
         {
+            if (key != KEY)
+                return Result.Unauthorized<List<ScoreDTO>>();
             if (userName == null)
                 return Result.BadRequest<List<ScoreDTO>>();
             List<Score> scores = await _repo.GetAll(userName);
@@ -44,9 +48,11 @@ namespace tp_final_score_api.Controllers
         }
 
 
-        [HttpGet("/api/v1/[controller]/{userName}/{scoreId}")]
-        public async Task<Result<ScoreDTO>> Get(string userName, int scoreId)
+        [HttpGet("/api/v1/{key}/[controller]/{userName}/{scoreId}")]
+        public async Task<Result<ScoreDTO>> Get(string key, string userName, int scoreId)
         {
+            if (key != KEY)
+                return Result.Unauthorized<ScoreDTO>();
             if (userName == null || scoreId == null)
                 return Result.BadRequest<ScoreDTO>();
             Score score = await _repo.Get(userName, scoreId);
@@ -57,9 +63,11 @@ namespace tp_final_score_api.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<Result<ScoreDTO>> Post([FromBody] ScoreDTO postobjet)
+        [HttpPost("/api/v1/{key}/[controller]")]
+        public async Task<Result<ScoreDTO>> Post(string key, [FromBody] ScoreDTO postobjet)
         {
+            if (key != KEY)
+                return Result.Unauthorized<ScoreDTO>();
             if (postobjet == null )
                 return Result.BadRequest<ScoreDTO>();
             Score toCreate = _mapper.Map<Score>(postobjet);
@@ -71,9 +79,11 @@ namespace tp_final_score_api.Controllers
         }
 
 
-        [HttpDelete("/api/v1/[controller]/{userName}/{scoreId}")]
-        public async Task<Result<ScoreDTO>> Delete( int scoreId, string userName)
+        [HttpDelete("/api/v1/{key}/[controller]/{userName}/{scoreId}")]
+        public async Task<Result<ScoreDTO>> Delete(string key, int scoreId, string userName)
         {
+            if (key != KEY)
+                return Result.Unauthorized<ScoreDTO>();
             if (scoreId == null || userName == null)
                 return Result.BadRequest<ScoreDTO>();
             Score score = await _repo.Delete(userName, scoreId);

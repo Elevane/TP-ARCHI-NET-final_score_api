@@ -40,7 +40,7 @@
 
         internal static Result Ok()
         {
-            throw new NotImplementedException();
+            return new Result(null);
         }
 
         public static Result<T> BadRequest<T>()
@@ -51,6 +51,16 @@
         public static Result<T> NotFound<T>()
         {
             return new Result<T>("Not Found", 404);
+
+        }
+        public static Result<T> Unauthorized<T>()
+        {
+            return new Result<T>("Unauthorized access", 401);
+        }
+
+        public static Result Unauthorized()
+        {
+            return new Result("Unauthorized access", 401);
         }
 
 
